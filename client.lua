@@ -1,14 +1,14 @@
 local engineStalledVehicles = {} 
 local lastVehicleHealth = 0
 
-RegisterNetEvent("carEngineStalling:checkStalling")
-AddEventHandler("carEngineStalling:checkStalling", function(vehicle)
+RegisterNetEvent("ejj_stallingengine:checkStalling")
+AddEventHandler("ejj_stallingengine:checkStalling", function(vehicle)
     if DoesEntityExist(vehicle) and IsEntityAVehicle(vehicle) then
         local currentHealth = GetVehicleBodyHealth(vehicle)
         local healthDifference = lastVehicleHealth - currentHealth
 
         if healthDifference > Config.MinHealthDifference and not engineStalledVehicles[vehicle] then
-            TriggerEvent("carEngineStalling:stallEngineAndDizzy", vehicle)
+            TriggerEvent("ejj_stallingengine:stallEngine", vehicle)
             engineStalledVehicles[vehicle] = true
         end
 
@@ -16,8 +16,8 @@ AddEventHandler("carEngineStalling:checkStalling", function(vehicle)
     end
 end)
 
-RegisterNetEvent("carEngineStalling:stallEngineAndDizzy")
-AddEventHandler("carEngineStalling:stallEngineAndDizzy", function(vehicle)
+RegisterNetEvent("ejj_stallingengine:stallEngine")
+AddEventHandler("ejj_stallingengine:stallEngine", function(vehicle)
     if DoesEntityExist(vehicle) and IsEntityAVehicle(vehicle) then
         if not engineStalledVehicles[vehicle] then
             engineStalledVehicles[vehicle] = true
@@ -67,7 +67,7 @@ Citizen.CreateThread(function()
                 local speed = (Config.Unit == 'kph') and (GetEntitySpeed(vehicle) * 3.6) or (GetEntitySpeed(vehicle) * 2.236936)
                 
                 if healthDifference > Config.MinHealthDifference and speed > Config.Speed and not engineStalledVehicles[vehicle] then
-                    TriggerEvent("carEngineStalling:checkStalling", vehicle)
+                    TriggerEvent("ejj_stallingengine:checkStalling", vehicle)
                 end
 
                 lastVehicleHealth = currentHealth
